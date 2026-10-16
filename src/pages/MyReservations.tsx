@@ -16,8 +16,11 @@ export default function MyReservations() {
             const eq = getEquipment(r.equipementId);
             return (
               <li key={r.id} className="card row">
-                {eq ? <Link to={`/materiels/${eq.id}`}>{eq.nom}</Link> : <span>Équipement supprimé</span>}
-                <button className="btn danger" onClick={() => cancelReservation(r.id)}>Annuler</button>
+                <strong>{eq ? eq.nom : "Équipement supprimé"}</strong>
+                <div className="actions">
+                  {eq && <Link className="btn secondary" to={`/materiels/${eq.id}`}>Voir la fiche</Link>}
+                  <button className="btn danger" onClick={() => cancelReservation(r.id)}>Annuler</button>
+                </div>
               </li>
             );
           })}
