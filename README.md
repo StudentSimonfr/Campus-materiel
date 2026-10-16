@@ -45,6 +45,7 @@ src/
 │   ├── AppProvider.tsx          État partagé + TOUTES les règles métier
 │   └── useApp.ts                Hook d'accès au contexte
 ├── components/                  Layout, ProtectedRoute, EquipmentCard, EquipmentForm
+├── hooks/useKeyboardNavigation.ts  Navigation aux flèches + espace
 └── pages/                       Login, Catalogue, EquipmentDetail, MyReservations, AccessDenied, NotFound
     └── gestion/                 Gestion, EquipmentFormPage (lazy)
 ```
@@ -67,6 +68,16 @@ src/
 
 ## Fonctionnalités réalisées
 Connexion/déconnexion simulée avec session persistante · routes protégées par session et rôle (URL directe incluse) · accès refusé / 404 / équipement inexistant · catalogue avec recherche, filtre, disponibilité, fiche détaillée · messages « catalogue vide » et « aucun résultat » · réservation et annulation · « Mes réservations » · gestion complète (liste, création, modification, suppression avec confirmation) · un seul formulaire contrôlé avec validation (nom ≥ 3, description ≥ 10, champs obligatoires, valeurs conservées) · gestion des erreurs `localStorage` · lien actif surligné · responsive, thème clair/sombre, messages `aria-live`.
+
+## Navigation au clavier
+| Touche | Action |
+|---|---|
+| ↓ ↑ ← → | Déplace le focus vers l'élément cliquable le plus proche dans cette direction (cartes, tableau, menu, boutons) |
+| Barre d'espace | Valide l'élément sélectionné (boutons et liens) |
+| Échap | Ferme la fenêtre de confirmation |
+| Tab / Maj+Tab | Navigation classique (toujours disponible) |
+
+Dans un champ de saisie, ← → déplacent le curseur et ↑ ↓ quittent le champ ; dans une zone de texte ou une liste déroulante, les flèches gardent leur rôle habituel. Quand une fenêtre de confirmation est ouverte, la navigation reste à l'intérieur. Code : `src/hooks/useKeyboardNavigation.ts`, activé dans `Layout.tsx`.
 
 ## Limites connues
 - Protections **uniquement frontend** (démonstration, pas de sécurité réelle).

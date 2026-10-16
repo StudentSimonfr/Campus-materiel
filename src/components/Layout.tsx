@@ -2,10 +2,12 @@ import { useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useApp } from "../context/useApp";
 import { ROLE_LABEL } from "../data/libelles";
+import { useKeyboardNavigation } from "../hooks/useKeyboardNavigation";
 
 export default function Layout() {
   const { user, logout, notice, setNotice, storageError } = useApp();
   const navigate = useNavigate();
+  useKeyboardNavigation();
 
   useEffect(() => {
     if (!notice) return;
