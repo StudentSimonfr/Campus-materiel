@@ -61,19 +61,28 @@ export function useKeyboardNavigation(): void {
 
       const dir = KEY_TO_DIRECTION[e.key];
       if (!dir) return;
-      // On laisse le comportement natif dans les zones de saisie et listes déroulantes
-      if (target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement) return;
+      const isSelect = target instanceof HTMLSelectElement;
+      // Zone de texte : comportement natif. Champ de saisie : ← → déplacent le curseur.
+      if (target instanceof HTMLTextAreaElement) return;
       if (target instanceof HTMLInputElement && (dir === "left" || dir === "right")) return;
+      // Liste déroulante : ↑ ↓ changent l'option (natif) ; ← → servent à en sortir.
+      if (isSelect && (dir === "up" || dir === "down")) return;
 
       const candidates = getCandidates();
       if (candidates.length === 0) return;
       const active = document.activeElement;
       const current = active instanceof HTMLElement && candidates.includes(active) ? active : null;
 
-      const next = current
+      let next = current
         ? findNext(current, dir, candidates)
         : dir === "up" || dir === "left" ? candidates[candidates.length - 1] : candidates[0];
 
+      // Depuis une liste déroulante, s'il n'y a rien dans cette direction : élément suivant/précédent
+      if (!next && isSelect && current) {
+        next = candidates[candidates.indexOf(current) + (dir === "right" ? 1 : -1)] ?? null;
+      }
+
+      if (isSelect) e.preventDefault(); // ← → ne doivent jamais changer l'option sélectionnée
       if (next) { e.preventDefault(); next.focus(); }
     };
     document.addEventListener("keydown", onKeyDown);
