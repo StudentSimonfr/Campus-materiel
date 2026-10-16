@@ -1,11 +1,16 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../context/useApp";
 import type { Equipement } from "../../data/donnees-initiales";
+import ConfirmDialog from "../../components/ConfirmDialog";
 
 export default function Gestion() {
   const { catalogue, isAvailable, deleteEquipment } = useApp();
-  const handleDelete = (e: Equipement) => {
-    if (window.confirm(`Supprimer « ${e.nom} » ?`)) deleteEquipment(e.id); // le refus est géré dans le contexte
+  const [toDelete, setToDelete] = useState<Equipement | null>(null);
+
+  const confirmDelete = () => {
+    if (toDelete) deleteEquipment(toDelete.id); // le refus (équipement réservé) est géré dans le contexte
+    setToDelete(null);
   };
   return (
     <section>
@@ -23,7 +28,7 @@ export default function Gestion() {
                   <td><span className={`badge ${isAvailable(e.id) ? "ok" : "ko"}`}>{isAvailable(e.id) ? "Disponible" : "Réservé"}</span></td>
                   <td className="actions">
                     <Link className="btn secondary" to={`/gestion/${e.id}/modifier`}>Modifier</Link>
-                    <button className="btn danger" onClick={() => handleDelete(e)}>Supprimer</button>
+                    <button className="btn danger" onClick={() => setToDelete(e)}>Supprimer</button>
                   </td>
                 </tr>
               ))}
@@ -31,6 +36,10 @@ export default function Gestion() {
           </table>
         </div>
       )}
+      <ConfirmDialog open={toDelete !== null} title="Supprimer cet équipement ?"
+        confirmLabel="Supprimer" onConfirm={confirmDelete} onCancel={() => setToDelete(null)}>
+        <p>Vous allez supprimer <strong>{toDelete?.nom}</strong>. Cette action est définitive.</p>
+      </ConfirmDialog>
     </section>
   );
 }

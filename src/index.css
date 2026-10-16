@@ -208,3 +208,21 @@ td.actions { padding-block: .6rem; }
   .form { padding: 1.1rem; }
   li.card.row { flex-direction: column; align-items: flex-start; }
 }
+
+/* ===== Fenêtre de confirmation ===== */
+.dialog {
+  width: min(92vw, 440px); padding: 0;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface); color: var(--fg);
+  box-shadow: var(--shadow-lg);
+}
+.dialog[open] { animation: dialog-in .2s ease-out; }
+.dialog::backdrop { background: rgb(15 18 32 / 55%); backdrop-filter: blur(3px); }
+.dialog-body { padding: 1.5rem; }
+.dialog h2 { margin: 0 0 .6rem; font-size: 1.2rem; letter-spacing: -0.01em; }
+.dialog-text { color: var(--muted); }
+.dialog-text p { margin: 0; }
+.dialog-text strong { color: var(--fg); }
+.dialog-actions { justify-content: flex-end; margin-top: 1.4rem; }
+@keyframes dialog-in { from { opacity: 0; transform: translateY(10px) scale(.97); } to { opacity: 1; transform: none; } }
+@media (max-width: 640px) { .dialog-actions .btn { flex: 1; } }
